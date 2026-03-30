@@ -823,10 +823,10 @@ async function runSeed() {
   try {
     const res = await fetch('/api/admin/seed', { method: 'POST' });
     if (!res.ok) throw new Error('Ошибка');
-    showToast('Тестовые данные загружены', 'success');
+    toast('Тестовые данные загружены', 'success');
     navigate(currentPage);
   } catch (e) {
-    showToast('Ошибка загрузки данных', 'error');
+    toast('Ошибка загрузки данных', 'error');
   }
 }
 
