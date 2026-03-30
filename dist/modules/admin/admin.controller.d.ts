@@ -1,4 +1,5 @@
 import { AdminService } from './admin.service';
+import { SeedService } from '../../seed/seed.service';
 import { CreateComplexDto } from './dto/create-complex.dto';
 import { UpdateComplexDto } from './dto/update-complex.dto';
 import { CreateBuildingDto } from './dto/create-building.dto';
@@ -7,7 +8,11 @@ import { UpdateApplicationStatusDto } from './dto/update-application-status.dto'
 import { ApplicationStatus, ApplicationType } from '../application/entities/application.entity';
 export declare class AdminController {
     private readonly adminService;
-    constructor(adminService: AdminService);
+    private readonly seedService;
+    constructor(adminService: AdminService, seedService: SeedService);
+    runSeed(): Promise<{
+        message: string;
+    }>;
     createCity(body: {
         name: string;
     }): Promise<import("../city/entities/city.entity").City>;

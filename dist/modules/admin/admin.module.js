@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const admin_controller_1 = require("./admin.controller");
 const admin_service_1 = require("./admin.service");
+const seed_module_1 = require("../../seed/seed.module");
 const complex_entity_1 = require("../complex/entities/complex.entity");
 const building_entity_1 = require("../building/entities/building.entity");
 const apartment_entity_1 = require("../apartment/entities/apartment.entity");
@@ -22,6 +23,7 @@ exports.AdminModule = AdminModule;
 exports.AdminModule = AdminModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            seed_module_1.SeedModule,
             typeorm_1.TypeOrmModule.forFeature([
                 complex_entity_1.ResidentialComplex,
                 building_entity_1.Building,

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminController = void 0;
 const common_1 = require("@nestjs/common");
 const admin_service_1 = require("./admin.service");
+const seed_service_1 = require("../../seed/seed.service");
 const create_complex_dto_1 = require("./dto/create-complex.dto");
 const update_complex_dto_1 = require("./dto/update-complex.dto");
 const create_building_dto_1 = require("./dto/create-building.dto");
@@ -22,8 +23,13 @@ const create_apartment_dto_1 = require("./dto/create-apartment.dto");
 const update_application_status_dto_1 = require("./dto/update-application-status.dto");
 const application_entity_1 = require("../application/entities/application.entity");
 let AdminController = class AdminController {
-    constructor(adminService) {
+    constructor(adminService, seedService) {
         this.adminService = adminService;
+        this.seedService = seedService;
+    }
+    async runSeed() {
+        await this.seedService.run();
+        return { message: 'Тестовые данные успешно загружены' };
     }
     createCity(body) {
         return this.adminService.createCity(body.name);
@@ -69,6 +75,12 @@ let AdminController = class AdminController {
     }
 };
 exports.AdminController = AdminController;
+__decorate([
+    (0, common_1.Post)('seed'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "runSeed", null);
 __decorate([
     (0, common_1.Post)('cities'),
     __param(0, (0, common_1.Body)()),
@@ -175,6 +187,7 @@ __decorate([
 ], AdminController.prototype, "updateApplicationStatus", null);
 exports.AdminController = AdminController = __decorate([
     (0, common_1.Controller)('admin'),
-    __metadata("design:paramtypes", [admin_service_1.AdminService])
+    __metadata("design:paramtypes", [admin_service_1.AdminService,
+        seed_service_1.SeedService])
 ], AdminController);
 //# sourceMappingURL=admin.controller.js.map
