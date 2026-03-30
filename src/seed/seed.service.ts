@@ -28,14 +28,11 @@ export class SeedService {
     await this.apartmentRepo.createQueryBuilder().delete().execute();
     await this.buildingRepo.createQueryBuilder().delete().execute();
     await this.complexRepo.createQueryBuilder().delete().execute();
+    await this.cityRepo.createQueryBuilder().delete().execute();
 
     // Seed default cities
-    for (const cityName of ['Астана', 'Алматы']) {
-      const exists = await this.cityRepo.findOneBy({ name: cityName });
-      if (!exists) {
-        await this.cityRepo.save({ name: cityName });
-      }
-    }
+    await this.cityRepo.save({ name: 'Астана' });
+    await this.cityRepo.save({ name: 'Алматы' });
 
     // Complex 1: Алатау Residence
     const complex1 = await this.complexRepo.save({
