@@ -24,16 +24,24 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
-            typeorm_1.TypeOrmModule.forRoot({
-                type: 'postgres',
-                host: process.env.DB_HOST || 'localhost',
-                port: parseInt(process.env.DB_PORT || '5432', 10),
-                username: process.env.DB_USERNAME || 'postgres',
-                password: process.env.DB_PASSWORD || 'postgres',
-                database: process.env.DB_NAME || 'capital_network',
-                autoLoadEntities: true,
-                synchronize: true,
-            }),
+            typeorm_1.TypeOrmModule.forRoot(process.env.DATABASE_URL
+                ? {
+                    type: 'postgres',
+                    url: process.env.DATABASE_URL,
+                    autoLoadEntities: true,
+                    synchronize: true,
+                    ssl: { rejectUnauthorized: false },
+                }
+                : {
+                    type: 'postgres',
+                    host: process.env.DB_HOST || 'localhost',
+                    port: parseInt(process.env.DB_PORT || '5432', 10),
+                    username: process.env.DB_USERNAME || 'postgres',
+                    password: process.env.DB_PASSWORD || 'postgres',
+                    database: process.env.DB_NAME || 'capital_network',
+                    autoLoadEntities: true,
+                    synchronize: true,
+                }),
             complex_module_1.ComplexModule,
             building_module_1.BuildingModule,
             apartment_module_1.ApartmentModule,

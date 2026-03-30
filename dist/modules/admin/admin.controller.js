@@ -28,8 +28,14 @@ let AdminController = class AdminController {
         this.seedService = seedService;
     }
     async runSeed() {
-        await this.seedService.run();
-        return { message: 'Тестовые данные успешно загружены' };
+        try {
+            await this.seedService.run();
+            return { message: 'Тестовые данные успешно загружены' };
+        }
+        catch (error) {
+            console.error('Seed error:', error);
+            return { message: 'Ошибка: ' + error.message, error: true };
+        }
     }
     createCity(body) {
         return this.adminService.createCity(body.name);

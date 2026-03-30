@@ -12,6 +12,10 @@ export declare class AdminController {
     constructor(adminService: AdminService, seedService: SeedService);
     runSeed(): Promise<{
         message: string;
+        error?: undefined;
+    } | {
+        message: string;
+        error: boolean;
     }>;
     createCity(body: {
         name: string;
