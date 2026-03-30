@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capital Network Admin</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --sidebar-bg: #1e293b;
+  --sidebar-hover: #334155;
+  --sidebar-active: #2563eb;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #dbeafe;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
+  --transition: all .2s ease;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  display: flex;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ───── Sidebar ───── */
+.sidebar {
+  width: 260px;
+  background: var(--sidebar-bg);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  transition: transform .3s ease;
+}
+.sidebar-logo {
+  padding: 24px 20px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sidebar-logo .logo-icon {
+  width: 36px; height: 36px;
+  background: var(--primary);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.sidebar-nav { padding: 12px 8px; flex: 1; }
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  color: var(--gray-300);
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition);
+  user-select: none;
+  text-decoration: none;
+}
+.nav-item:hover { background: var(--sidebar-hover); color: #fff; }
+.nav-item.active { background: var(--sidebar-active); color: #fff; }
+.nav-item .icon { font-size: 18px; width: 24px; text-align: center; }
+
+/* ───── Main Content ───── */
+.main {
+  margin-left: 260px;
+  flex: 1;
+  min-height: 100vh;
+  padding: 32px;
+}
+.page { display: none; }
+.page.active { display: block; }
+
+/* ───── Header ───── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.page-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+/* ───── Buttons ───── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  line-height: 1.4;
+}
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: var(--danger-hover); }
+.btn-secondary { background: var(--gray-200); color: var(--gray-700); }
+.btn-secondary:hover { background: var(--gray-300); }
+.btn-sm { padding: 6px 14px; font-size: 13px; }
+.btn-ghost { background: transparent; color: var(--gray-500); }
+.btn-ghost:hover { background: var(--gray-100); color: var(--gray-700); }
+
+/* ───── Cards Grid ───── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  transition: var(--transition);
+  border: 1px solid var(--gray-100);
+}
+.card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--gray-900);
+}
+.card-subtitle {
+  font-size: 13px;
+  color: var(--gray-500);
+  margin-bottom: 16px;
+}
+.card-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.stat {
+  font-size: 13px;
+  color: var(--gray-600);
+}
+.stat strong {
+  display: block;
+  font-size: 20px;
+  color: var(--gray-900);
+  font-weight: 700;
+}
+.card-actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gray-100);
+}
+
+/* ───── Badges ───── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.badge-green { background: #dcfce7; color: #166534; }
+.badge-orange { background: #fff7ed; color: #9a3412; }
+.badge-red { background: #fee2e2; color: #991b1b; }
+.badge-blue { background: #dbeafe; color: #1e40af; }
+.badge-gray { background: #f1f5f9; color: #475569; }
+.badge-purple { background: #f3e8ff; color: #6b21a8; }
+
+/* ───── Table ───── */
+.table-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  border: 1px solid var(--gray-100);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead { background: var(--gray-50); }
+th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--gray-500);
+  border-bottom: 1px solid var(--gray-200);
+}
+td {
+  padding: 14px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--gray-100);
+}
+tbody tr { transition: var(--transition); }
+tbody tr:hover { background: var(--gray-50); }
+tbody tr:nth-child(even) { background: #fafbfc; }
+tbody tr:nth-child(even):hover { background: var(--gray-100); }
+
+/* ───── Filter Bar ───── */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  border: 1px solid var(--gray-100);
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.filter-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+
+/* ───── Forms ───── */
+select, input[type="text"], input[type="number"], input[type="date"], input[type="email"], textarea {
+  padding: 9px 14px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--gray-900);
+  background: #fff;
+  transition: var(--transition);
+  outline: none;
+  width: 100%;
+}
+select:focus, input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+}
+select { cursor: pointer; padding-right: 32px; }
+textarea { resize: vertical; min-height: 80px; }
+
+.form-group {
+  margin-bottom: 18px;
+}
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 6px;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ───── Modal ───── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open {
+  display: flex;
+  animation: fadeIn .2s ease;
+}
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp .25s ease;
+}
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+.modal-close {
+  width: 32px; height: 32px;
+  border: none;
+  background: var(--gray-100);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray-500);
+  transition: var(--transition);
+}
+.modal-close:hover { background: var(--gray-200); color: var(--gray-700); }
+.modal-body { padding: 24px; }
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--gray-100);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ───── Toast ───── */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  padding: 14px 20px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: slideInRight .3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 300px;
+}
+.toast-success { background: #166534; color: #fff; }
+.toast-error { background: #991b1b; color: #fff; }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+
+/* ───── Loading ───── */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  color: var(--gray-400);
+  font-size: 15px;
+}
+.spinner {
+  width: 28px; height: 28px;
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin-right: 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ───── Detail View ───── */
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gray-500);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+.detail-back:hover { color: var(--primary); }
+
+.detail-section {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid var(--gray-100);
+}
+.detail-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.building-block {
+  background: var(--gray-50);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--gray-200);
+}
+.building-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.building-header h4 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.apt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+}
+.apt-card {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 12px;
+  font-size: 13px;
+  transition: var(--transition);
+}
+.apt-card:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+.apt-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.apt-card-header strong { font-size: 14px; }
+.apt-card-info {
+  color: var(--gray-500);
+  margin-bottom: 8px;
+}
+.apt-card-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+.apt-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--gray-100);
+}
+
+/* ───── Status dropdown in table ───── */
+.status-select {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 500;
+}
+.status-select:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+/* ───── Empty state ───── */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--gray-400);
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state p { font-size: 15px; }
+
+/* ───── Responsive ───── */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .filter-bar { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">CN</div>
+    <span>Capital Network</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item active" data-page="complexes" onclick="navigate('complexes')">
+      <span>Жилые комплексы</span>
+    </a>
+    <a class="nav-item" data-page="cities" onclick="navigate('cities')">
+      <span>Города</span>
+    </a>
+    <a class="nav-item" data-page="applications" onclick="navigate('applications')">
+      <span>Заявки</span>
+    </a>
+  </nav>
+</aside>
+
+<!-- Main Content -->
+<main class="main">
+
+  <!-- Complexes Page -->
+  <div class="page active" id="page-complexes">
+    <div class="page-header">
+      <h1 class="page-title">Жилые комплексы</h1>
+      <button class="btn btn-primary" onclick="openCreateComplexModal()">+ Добавить ЖК</button>
+    </div>
+    <div id="complexes-list" class="cards-grid"></div>
+  </div>
+
+  <!-- Complex Detail Page -->
+  <div class="page" id="page-complex-detail">
+    <div class="detail-back" onclick="navigate('complexes')">&#8592; Назад к списку</div>
+    <div id="complex-detail-content"></div>
+  </div>
+
+  <!-- Cities Page -->
+  <div class="page" id="page-cities">
+    <div class="page-header">
+      <h1 class="page-title">Города</h1>
+      <button class="btn btn-primary" onclick="openCreateCityModal()">+ Добавить город</button>
+    </div>
+    <div id="cities-list" class="cards-grid"></div>
+  </div>
+
+  <!-- Applications Page -->
+  <div class="page" id="page-applications">
+    <div class="page-header">
+      <h1 class="page-title">Заявки</h1>
+    </div>
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label>Статус</label>
+        <select id="filter-status" style="width:160px">
+          <option value="">Все статусы</option>
+          <option value="new">Новая</option>
+          <option value="in_progress">В обработке</option>
+          <option value="approved">Одобрена</option>
+          <option value="rejected">Отклонена</option>
+          <option value="cancelled">Отменена</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Тип</label>
+        <select id="filter-type" style="width:160px">
+          <option value="">Все типы</option>
+          <option value="inquiry">Запрос</option>
+          <option value="booking">Бронь</option>
+          <option value="purchase">Покупка</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Дата от</label>
+        <input type="date" id="filter-date-from" style="width:160px">
+      </div>
+      <div class="filter-group">
+        <label>Дата до</label>
+        <input type="date" id="filter-date-to" style="width:160px">
+      </div>
+      <div class="filter-group" style="flex-direction:row;gap:8px;align-self:flex-end">
+        <button class="btn btn-primary btn-sm" onclick="loadApplications()">Применить</button>
+        <button class="btn btn-secondary btn-sm" onclick="resetFilters()">Сбросить</button>
+      </div>
+    </div>
+    <div id="applications-list"></div>
+  </div>
+
+</main>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Create Complex Modal -->
+<div class="modal-overlay" id="modal-create-complex">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Новый жилой комплекс</h2>
+      <button class="modal-close" onclick="closeModal('modal-create-complex')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Название *</label>
+          <input type="text" id="cc-name" placeholder="Название ЖК">
+        </div>
+        <div class="form-group">
+          <label>Город *</label>
+          <select id="cc-city">
+            <option value="">Выберите город</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Адрес *</label>
+        <input type="text" id="cc-address" placeholder="Полный адрес">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Застройщик *</label>
+          <input type="text" id="cc-developer" placeholder="Компания-застройщик">
+        </div>
+        <div class="form-group">
+          <label>Статус</label>
+          <select id="cc-status">
+            <option value="selling">Продажа</option>
+            <option value="under_construction">Строительство</option>
+            <option value="completed">Завершён</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Дата сдачи</label>
+          <input type="date" id="cc-completion-date">
+        </div>
+        <div></div>
+      </div>
+      <div class="form-group">
+        <label>Описание</label>
+        <textarea id="cc-description" placeholder="Описание жилого комплекса"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-create-complex')">Отмена</button>
+      <button class="btn btn-primary" onclick="createComplex()">Создать</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Building Modal -->
+<div class="modal-overlay" id="modal-create-building">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Новый корпус</h2>
+      <button class="modal-close" onclick="closeModal('modal-create-building')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="cb-complex-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Название *</label>
+          <input type="text" id="cb-name" placeholder="Корпус 1">
+        </div>
+        <div class="form-group">
+          <label>Этажей *</label>
+          <input type="number" id="cb-floors" placeholder="25" min="1">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Статус</label>
+        <select id="cb-status">
+          <option value="completed">Завершён</option>
+          <option value="under_construction">Строительство</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-create-building')">Отмена</button>
+      <button class="btn btn-primary" onclick="createBuilding()">Создать</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create/Edit Apartment Modal -->
+<div class="modal-overlay" id="modal-apartment">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="apt-modal-title">Новая квартира</h2>
+      <button class="modal-close" onclick="closeModal('modal-apartment')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="apt-id">
+      <input type="hidden" id="apt-building-id">
+      <input type="hidden" id="apt-complex-id-ref">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Номер *</label>
+          <input type="text" id="apt-number" placeholder="101">
+        </div>
+        <div class="form-group">
+          <label>Этаж *</label>
+          <input type="number" id="apt-floor" placeholder="1" min="1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Комнат *</label>
+          <input type="number" id="apt-rooms" placeholder="2" min="1">
+        </div>
+        <div class="form-group">
+          <label>Площадь (м2) *</label>
+          <input type="number" id="apt-area" placeholder="65.5" step="0.1" min="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Цена (тг) *</label>
+          <input type="number" id="apt-price" placeholder="15000000" min="0">
+        </div>
+        <div class="form-group">
+          <label>Статус</label>
+          <select id="apt-status">
+            <option value="available">Свободна</option>
+            <option value="reserved">Забронирована</option>
+            <option value="sold">Продана</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Планировка</label>
+        <select id="apt-layout">
+          <option value="">— Не указана —</option>
+          <option value="Студия">Студия</option>
+          <option value="1-комнатная">1-комнатная</option>
+          <option value="2-комнатная">2-комнатная</option>
+          <option value="3-комнатная">3-комнатная</option>
+          <option value="4-комнатная">4-комнатная</option>
+          <option value="Евро">Евро</option>
+          <option value="Свободная">Свободная</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-apartment')">Отмена</button>
+      <button class="btn btn-primary" id="apt-submit-btn" onclick="submitApartment()">Создать</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create City Modal -->
+<div class="modal-overlay" id="modal-create-city">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <h2>Новый город</h2>
+      <button class="modal-close" onclick="closeModal('modal-create-city')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Название города *</label>
+        <input type="text" id="city-name" placeholder="Название города">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-create-city')">Отмена</button>
+      <button class="btn btn-primary" onclick="createCity()">Создать</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// Configuration
+// ═══════════════════════════════════════════════════════════════
+const API = '/api/admin';
+
+// ═══════════════════════════════════════════════════════════════
+// State
+// ═══════════════════════════════════════════════════════════════
+let currentPage = 'complexes';
+let currentComplexId = null;
+let citiesCache = [];
+
+// ═══════════════════════════════════════════════════════════════
+// Navigation
+// ═══════════════════════════════════════════════════════════════
+function navigate(page, data) {
+  currentPage = page;
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  if (page === 'complexes') {
+    document.getElementById('page-complexes').classList.add('active');
+    document.querySelector('[data-page="complexes"]').classList.add('active');
+    loadComplexes();
+  } else if (page === 'complex-detail') {
+    document.getElementById('page-complex-detail').classList.add('active');
+    document.querySelector('[data-page="complexes"]').classList.add('active');
+    currentComplexId = data;
+    loadComplexDetail(data);
+  } else if (page === 'cities') {
+    document.getElementById('page-cities').classList.add('active');
+    document.querySelector('[data-page="cities"]').classList.add('active');
+    loadCities();
+  } else if (page === 'applications') {
+    document.getElementById('page-applications').classList.add('active');
+    document.querySelector('[data-page="applications"]').classList.add('active');
+    loadApplications();
+  }
+
+  window.location.hash = page === 'complex-detail' ? 'complex/' + data : page;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// API Helpers
+// ═══════════════════════════════════════════════════════════════
+async function apiGet(url) {
+  const res = await fetch(API + url);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function apiPost(url, body) {
+  const res = await fetch(API + url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    let msg;
+    try { msg = JSON.parse(text).message; } catch(e) { msg = text; }
+    throw new Error(Array.isArray(msg) ? msg.join(', ') : msg);
+  }
+  return res.json();
+}
+
+async function apiPatch(url, body) {
+  const res = await fetch(API + url, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    let msg;
+    try { msg = JSON.parse(text).message; } catch(e) { msg = text; }
+    throw new Error(Array.isArray(msg) ? msg.join(', ') : msg);
+  }
+  return res.json();
+}
+
+async function apiDelete(url) {
+  const res = await fetch(API + url, { method: 'DELETE' });
+  if (!res.ok) throw new Error(await res.text());
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Toast Notifications
+// ═══════════════════════════════════════════════════════════════
+function toast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = 'toast toast-' + type;
+  el.innerHTML = (type === 'success' ? '&#10003; ' : '&#10007; ') + escapeHtml(message);
+  container.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 300); }, 3500);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Utility
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function formatPrice(n) {
+  if (n == null) return '-';
+  return Number(n).toLocaleString('ru-RU').replace(/,/g, ' ');
+}
+
+function formatDate(d) {
+  if (!d) return '-';
+  return new Date(d).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function formatDateTime(d) {
+  if (!d) return '-';
+  return new Date(d).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function complexStatusBadge(status) {
+  const map = {
+    selling: ['Продажа', 'badge-green'],
+    under_construction: ['Строительство', 'badge-orange'],
+    completed: ['Завершён', 'badge-gray'],
+  };
+  const [label, cls] = map[status] || [status, 'badge-gray'];
+  return '<span class="badge ' + cls + '">' + label + '</span>';
+}
+
+function apartmentStatusBadge(status) {
+  const map = {
+    available: ['Свободна', 'badge-green'],
+    reserved: ['Забронирована', 'badge-orange'],
+    sold: ['Продана', 'badge-red'],
+  };
+  const [label, cls] = map[status] || [status, 'badge-gray'];
+  return '<span class="badge ' + cls + '">' + label + '</span>';
+}
+
+function applicationStatusBadge(status) {
+  const map = {
+    new: ['Новая', 'badge-blue'],
+    in_progress: ['В обработке', 'badge-orange'],
+    approved: ['Одобрена', 'badge-green'],
+    rejected: ['Отклонена', 'badge-red'],
+    cancelled: ['Отменена', 'badge-gray'],
+  };
+  const [label, cls] = map[status] || [status, 'badge-gray'];
+  return '<span class="badge ' + cls + '">' + label + '</span>';
+}
+
+function applicationTypeBadge(type) {
+  const map = {
+    inquiry: ['Запрос', 'badge-gray'],
+    booking: ['Бронь', 'badge-blue'],
+    purchase: ['Покупка', 'badge-purple'],
+  };
+  const [label, cls] = map[type] || [type, 'badge-gray'];
+  return '<span class="badge ' + cls + '">' + label + '</span>';
+}
+
+function buildingStatusBadge(status) {
+  const map = {
+    completed: ['Завершён', 'badge-green'],
+    under_construction: ['Строительство', 'badge-orange'],
+  };
+  const [label, cls] = map[status] || [status, 'badge-gray'];
+  return '<span class="badge ' + cls + '">' + label + '</span>';
+}
+
+function showLoading(el) {
+  el.innerHTML = '<div class="loading"><div class="spinner"></div> Загрузка...</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Modal Helpers
+// ═══════════════════════════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// Close modal on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('modal-overlay') && e.target.classList.contains('open')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// Cities
+// ═══════════════════════════════════════════════════════════════
+async function loadCities() {
+  const container = document.getElementById('cities-list');
+  showLoading(container);
+  try {
+    const data = await (await fetch('/api/cities')).json();
+    citiesCache = data;
+    if (data.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">&#127961;</div><p>Городов пока нет</p></div>';
+      return;
+    }
+    container.innerHTML = data.map(c => `
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="card-title">&#127961; ${escapeHtml(c.name)}</div>
+          <button class="btn btn-danger btn-sm" onclick="deleteCity('${c.id}','${escapeHtml(c.name)}')">Удалить</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    container.innerHTML = '<div class="empty-state"><p>Ошибка загрузки: ' + escapeHtml(e.message) + '</p></div>';
+    toast(e.message, 'error');
+  }
+}
+
+async function fetchCitiesForSelect() {
+  try {
+    const data = await (await fetch('/api/cities')).json();
+    citiesCache = data;
+  } catch (e) {
+    citiesCache = [];
+  }
+}
+
+function populateCitySelect(selectId, selectedValue) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+  const options = '<option value="">Выберите город</option>' +
+    citiesCache.map(c =>
+      '<option value="' + escapeHtml(c.name) + '"' + (c.name === selectedValue ? ' selected' : '') + '>' + escapeHtml(c.name) + '</option>'
+    ).join('');
+  select.innerHTML = options;
+}
+
+function openCreateCityModal() {
+  document.getElementById('city-name').value = '';
+  openModal('modal-create-city');
+}
+
+async function createCity() {
+  const name = document.getElementById('city-name').value.trim();
+  if (!name) {
+    toast('Введите название города', 'error');
+    return;
+  }
+  try {
+    await apiPost('/cities', { name });
+    closeModal('modal-create-city');
+    toast('Город создан');
+    loadCities();
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+async function deleteCity(id, name) {
+  if (!confirm('Удалить город "' + name + '"?')) return;
+  try {
+    await apiDelete('/cities/' + id);
+    toast('Город удалён');
+    loadCities();
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Complexes Page
+// ═══════════════════════════════════════════════════════════════
+async function loadComplexes() {
+  const container = document.getElementById('complexes-list');
+  showLoading(container);
+  try {
+    const data = await apiGet('/complexes');
+    if (data.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">&#127968;</div><p>Жилых комплексов пока нет</p></div>';
+      return;
+    }
+    container.innerHTML = data.map(c => `
+      <div class="card">
+        <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:4px">
+          <div class="card-title">${escapeHtml(c.name)}</div>
+          ${complexStatusBadge(c.status)}
+        </div>
+        <div class="card-subtitle">${escapeHtml(c.city)} &middot; ${escapeHtml(c.developer)}</div>
+        <div class="card-stats">
+          <div class="stat"><strong>${c.buildingsCount || 0}</strong>Корпусов</div>
+          <div class="stat"><strong>${c.apartmentsCount || 0}</strong>Квартир</div>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary btn-sm" onclick="navigate('complex-detail','${c.id}')">Подробнее</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteComplex('${c.id}','${escapeHtml(c.name)}')">Удалить</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    container.innerHTML = '<div class="empty-state"><p>Ошибка загрузки: ' + escapeHtml(e.message) + '</p></div>';
+    toast(e.message, 'error');
+  }
+}
+
+async function openCreateComplexModal() {
+  await fetchCitiesForSelect();
+  document.getElementById('cc-name').value = '';
+  populateCitySelect('cc-city', '');
+  document.getElementById('cc-address').value = '';
+  document.getElementById('cc-developer').value = '';
+  document.getElementById('cc-status').value = 'selling';
+  document.getElementById('cc-completion-date').value = '';
+  document.getElementById('cc-description').value = '';
+  openModal('modal-create-complex');
+}
+
+async function createComplex() {
+  const body = {
+    name: document.getElementById('cc-name').value.trim(),
+    city: document.getElementById('cc-city').value.trim(),
+    address: document.getElementById('cc-address').value.trim(),
+    developer: document.getElementById('cc-developer').value.trim(),
+    status: document.getElementById('cc-status').value,
+  };
+  const desc = document.getElementById('cc-description').value.trim();
+  if (desc) body.description = desc;
+  const cd = document.getElementById('cc-completion-date').value;
+  if (cd) body.completionDate = cd;
+
+  if (!body.name || !body.city || !body.address || !body.developer) {
+    toast('Заполните все обязательные поля', 'error');
+    return;
+  }
+
+  try {
+    await apiPost('/complexes', body);
+    closeModal('modal-create-complex');
+    toast('Жилой комплекс создан');
+    loadComplexes();
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+async function deleteComplex(id, name) {
+  if (!confirm('Удалить жилой комплекс "' + name + '" и все связанные данные?')) return;
+  try {
+    await apiDelete('/complexes/' + id);
+    toast('Жилой комплекс удалён');
+    loadComplexes();
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Complex Detail Page
+// ═══════════════════════════════════════════════════════════════
+async function loadComplexDetail(id) {
+  const container = document.getElementById('complex-detail-content');
+  showLoading(container);
+  try {
+    await fetchCitiesForSelect();
+    const c = await apiGet('/complexes/' + id);
+    let html = `
+      <div class="detail-section">
+        <div class="detail-section-title">
+          <span>Информация о комплексе</span>
+          ${complexStatusBadge(c.status)}
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Название</label>
+            <input type="text" id="ed-name" value="${escapeHtml(c.name)}">
+          </div>
+          <div class="form-group">
+            <label>Город</label>
+            <select id="ed-city">
+              <option value="">Выберите город</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Адрес</label>
+          <input type="text" id="ed-address" value="${escapeHtml(c.address)}">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Застройщик</label>
+            <input type="text" id="ed-developer" value="${escapeHtml(c.developer)}">
+          </div>
+          <div class="form-group">
+            <label>Статус</label>
+            <select id="ed-status">
+              <option value="selling" ${c.status==='selling'?'selected':''}>Продажа</option>
+              <option value="under_construction" ${c.status==='under_construction'?'selected':''}>Строительство</option>
+              <option value="completed" ${c.status==='completed'?'selected':''}>Завершён</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Дата сдачи</label>
+            <input type="date" id="ed-completion-date" value="${c.completionDate ? c.completionDate.substring(0,10) : ''}">
+          </div>
+          <div></div>
+        </div>
+        <div class="form-group">
+          <label>Описание</label>
+          <textarea id="ed-description">${escapeHtml(c.description || '')}</textarea>
+        </div>
+        <button class="btn btn-primary" onclick="saveComplex('${c.id}')">Сохранить изменения</button>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-section-title">
+          <span>Корпуса и квартиры</span>
+          <button class="btn btn-primary btn-sm" onclick="openCreateBuildingModal('${c.id}')">+ Добавить корпус</button>
+        </div>`;
+
+    if (!c.buildings || c.buildings.length === 0) {
+      html += '<div class="empty-state"><p>Корпусов пока нет</p></div>';
+    } else {
+      for (const b of c.buildings) {
+        html += `
+          <div class="building-block">
+            <div class="building-header">
+              <h4>${escapeHtml(b.name)} &middot; ${b.floors} этажей ${buildingStatusBadge(b.status)}</h4>
+              <button class="btn btn-primary btn-sm" onclick="openCreateApartmentModal('${b.id}','${c.id}')">+ Добавить квартиру</button>
+            </div>`;
+
+        if (!b.apartments || b.apartments.length === 0) {
+          html += '<div style="color:var(--gray-400);font-size:13px;padding:8px 0">Квартир пока нет</div>';
+        } else {
+          html += '<div class="apt-grid">';
+          for (const a of b.apartments) {
+            html += `
+              <div class="apt-card">
+                <div class="apt-card-header">
+                  <strong>Кв. ${escapeHtml(a.number)}</strong>
+                  ${apartmentStatusBadge(a.status)}
+                </div>
+                <div class="apt-card-info">
+                  Этаж ${a.floor} &middot; ${a.rooms} комн. &middot; ${a.area} м&sup2;
+                  ${a.layout ? ' &middot; ' + escapeHtml(a.layout) : ''}
+                </div>
+                <div class="apt-card-price">${formatPrice(a.price)} &#8376;</div>
+                <div class="apt-card-actions">
+                  <button class="btn btn-secondary btn-sm" onclick="openEditApartmentModal('${a.id}','${a.number}',${a.floor},${a.rooms},${a.area},${a.price},'${a.status}','${escapeHtml(a.layout || '')}','${b.id}','${c.id}')">Редактировать</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteApartment('${a.id}','${c.id}')">Удалить</button>
+                </div>
+              </div>`;
+          }
+          html += '</div>';
+        }
+
+        html += '</div>';
+      }
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+    populateCitySelect('ed-city', c.city);
+  } catch (e) {
+    container.innerHTML = '<div class="empty-state"><p>Ошибка загрузки: ' + escapeHtml(e.message) + '</p></div>';
+    toast(e.message, 'error');
+  }
+}
+
+async function saveComplex(id) {
+  const body = {
+    name: document.getElementById('ed-name').value.trim(),
+    city: document.getElementById('ed-city').value.trim(),
+    address: document.getElementById('ed-address').value.trim(),
+    developer: document.getElementById('ed-developer').value.trim(),
+    status: document.getElementById('ed-status').value,
+    description: document.getElementById('ed-description').value.trim() || null,
+  };
+  const cd = document.getElementById('ed-completion-date').value;
+  if (cd) body.completionDate = cd;
+
+  try {
+    await apiPatch('/complexes/' + id, body);
+    toast('Изменения сохранены');
+    loadComplexDetail(id);
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Buildings
+// ═══════════════════════════════════════════════════════════════
+function openCreateBuildingModal(complexId) {
+  document.getElementById('cb-complex-id').value = complexId;
+  document.getElementById('cb-name').value = '';
+  document.getElementById('cb-floors').value = '';
+  document.getElementById('cb-status').value = 'completed';
+  openModal('modal-create-building');
+}
+
+async function createBuilding() {
+  const complexId = document.getElementById('cb-complex-id').value;
+  const body = {
+    name: document.getElementById('cb-name').value.trim(),
+    floors: parseInt(document.getElementById('cb-floors').value, 10),
+    status: document.getElementById('cb-status').value,
+  };
+
+  if (!body.name || isNaN(body.floors)) {
+    toast('Заполните все обязательные поля', 'error');
+    return;
+  }
+
+  try {
+    await apiPost('/complexes/' + complexId + '/buildings', body);
+    closeModal('modal-create-building');
+    toast('Корпус создан');
+    loadComplexDetail(complexId);
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Apartments
+// ═══════════════════════════════════════════════════════════════
+function openCreateApartmentModal(buildingId, complexId) {
+  document.getElementById('apt-modal-title').textContent = 'Новая квартира';
+  document.getElementById('apt-submit-btn').textContent = 'Создать';
+  document.getElementById('apt-id').value = '';
+  document.getElementById('apt-building-id').value = buildingId;
+  document.getElementById('apt-complex-id-ref').value = complexId;
+  document.getElementById('apt-number').value = '';
+  document.getElementById('apt-floor').value = '';
+  document.getElementById('apt-rooms').value = '';
+  document.getElementById('apt-area').value = '';
+  document.getElementById('apt-price').value = '';
+  document.getElementById('apt-status').value = 'available';
+  document.getElementById('apt-layout').value = '';
+  openModal('modal-apartment');
+}
+
+function openEditApartmentModal(id, number, floor, rooms, area, price, status, layout, buildingId, complexId) {
+  document.getElementById('apt-modal-title').textContent = 'Редактировать квартиру';
+  document.getElementById('apt-submit-btn').textContent = 'Сохранить';
+  document.getElementById('apt-id').value = id;
+  document.getElementById('apt-building-id').value = buildingId;
+  document.getElementById('apt-complex-id-ref').value = complexId;
+  document.getElementById('apt-number').value = number;
+  document.getElementById('apt-floor').value = floor;
+  document.getElementById('apt-rooms').value = rooms;
+  document.getElementById('apt-area').value = area;
+  document.getElementById('apt-price').value = price;
+  document.getElementById('apt-status').value = status;
+  document.getElementById('apt-layout').value = layout;
+  openModal('modal-apartment');
+}
+
+async function submitApartment() {
+  const id = document.getElementById('apt-id').value;
+  const buildingId = document.getElementById('apt-building-id').value;
+  const complexId = document.getElementById('apt-complex-id-ref').value;
+
+  const body = {
+    buildingId: buildingId,
+    number: document.getElementById('apt-number').value.trim(),
+    floor: parseInt(document.getElementById('apt-floor').value, 10),
+    rooms: parseInt(document.getElementById('apt-rooms').value, 10),
+    area: parseFloat(document.getElementById('apt-area').value),
+    price: parseFloat(document.getElementById('apt-price').value),
+    status: document.getElementById('apt-status').value,
+  };
+  const layout = document.getElementById('apt-layout').value.trim();
+  if (layout) body.layout = layout;
+
+  if (!body.number || isNaN(body.floor) || isNaN(body.rooms) || isNaN(body.area) || isNaN(body.price)) {
+    toast('Заполните все обязательные поля', 'error');
+    return;
+  }
+
+  try {
+    if (id) {
+      await apiPatch('/apartments/' + id, body);
+      toast('Квартира обновлена');
+    } else {
+      await apiPost('/apartments', body);
+      toast('Квартира создана');
+    }
+    closeModal('modal-apartment');
+    loadComplexDetail(complexId);
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+async function deleteApartment(id, complexId) {
+  if (!confirm('Удалить эту квартиру?')) return;
+  try {
+    await apiDelete('/apartments/' + id);
+    toast('Квартира удалена');
+    loadComplexDetail(complexId);
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Applications Page
+// ═══════════════════════════════════════════════════════════════
+async function loadApplications() {
+  const container = document.getElementById('applications-list');
+  showLoading(container);
+
+  const params = new URLSearchParams();
+  const status = document.getElementById('filter-status').value;
+  const type = document.getElementById('filter-type').value;
+  const dateFrom = document.getElementById('filter-date-from').value;
+  const dateTo = document.getElementById('filter-date-to').value;
+  if (status) params.set('status', status);
+  if (type) params.set('type', type);
+  if (dateFrom) params.set('dateFrom', dateFrom);
+  if (dateTo) params.set('dateTo', dateTo);
+
+  const qs = params.toString();
+  try {
+    const data = await apiGet('/applications' + (qs ? '?' + qs : ''));
+    if (data.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">&#128203;</div><p>Заявок не найдено</p></div>';
+      return;
+    }
+    let html = `
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Клиент</th>
+              <th>Телефон</th>
+              <th>Email</th>
+              <th>Тип</th>
+              <th>Квартира</th>
+              <th>Статус</th>
+              <th>Дата</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody>`;
+
+    for (const a of data) {
+      const aptInfo = a.apartment
+        ? 'Кв. ' + escapeHtml(a.apartment.number) + (a.apartment.building && a.apartment.building.complex ? ' / ' + escapeHtml(a.apartment.building.complex.name) : '')
+        : '-';
+
+      html += `
+        <tr>
+          <td style="font-family:monospace;font-size:12px;color:var(--gray-500)">${a.id.substring(0, 8)}</td>
+          <td><strong>${escapeHtml(a.firstName)} ${escapeHtml(a.lastName)}</strong></td>
+          <td>${escapeHtml(a.phone)}</td>
+          <td>${escapeHtml(a.email)}</td>
+          <td>${applicationTypeBadge(a.type)}</td>
+          <td style="font-size:13px">${aptInfo}</td>
+          <td>${applicationStatusBadge(a.status)}</td>
+          <td style="font-size:13px;color:var(--gray-500)">${formatDateTime(a.createdAt)}</td>
+          <td>
+            <select class="status-select" onchange="changeApplicationStatus('${a.id}', this.value)" value="${a.status}">
+              <option value="new" ${a.status==='new'?'selected':''}>Новая</option>
+              <option value="in_progress" ${a.status==='in_progress'?'selected':''}>В обработке</option>
+              <option value="approved" ${a.status==='approved'?'selected':''}>Одобрена</option>
+              <option value="rejected" ${a.status==='rejected'?'selected':''}>Отклонена</option>
+              <option value="cancelled" ${a.status==='cancelled'?'selected':''}>Отменена</option>
+            </select>
+          </td>
+        </tr>`;
+    }
+
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = '<div class="empty-state"><p>Ошибка загрузки: ' + escapeHtml(e.message) + '</p></div>';
+    toast(e.message, 'error');
+  }
+}
+
+async function changeApplicationStatus(id, status) {
+  try {
+    await apiPatch('/applications/' + id + '/status', { status });
+    toast('Статус заявки обновлён');
+  } catch (e) {
+    toast(e.message, 'error');
+    loadApplications();
+  }
+}
+
+function resetFilters() {
+  document.getElementById('filter-status').value = '';
+  document.getElementById('filter-type').value = '';
+  document.getElementById('filter-date-from').value = '';
+  document.getElementById('filter-date-to').value = '';
+  loadApplications();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Init
+// ═══════════════════════════════════════════════════════════════
+(function init() {
+  const hash = window.location.hash.replace('#', '');
+  if (hash.startsWith('complex/')) {
+    navigate('complex-detail', hash.split('/')[1]);
+  } else if (hash === 'cities') {
+    navigate('cities');
+  } else if (hash === 'applications') {
+    navigate('applications');
+  } else {
+    navigate('complexes');
+  }
+})();
+
+window.addEventListener('hashchange', function() {
+  const hash = window.location.hash.replace('#', '');
+  if (hash.startsWith('complex/')) {
+    const id = hash.split('/')[1];
+    if (currentPage !== 'complex-detail' || currentComplexId !== id) {
+      navigate('complex-detail', id);
+    }
+  } else if (hash === 'cities') {
+    if (currentPage !== 'cities') navigate('cities');
+  } else if (hash === 'applications') {
+    if (currentPage !== 'applications') navigate('applications');
+  } else if (hash === 'complexes' || hash === '') {
+    if (currentPage !== 'complexes') navigate('complexes');
+  }
+});
+</script>
+</body>
+</html>
