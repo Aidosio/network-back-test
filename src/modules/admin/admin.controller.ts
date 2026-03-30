@@ -28,8 +28,13 @@ export class AdminController {
 
   @Post('seed')
   async runSeed() {
-    await this.seedService.run();
-    return { message: 'Тестовые данные успешно загружены' };
+    try {
+      await this.seedService.run();
+      return { message: 'Тестовые данные успешно загружены' };
+    } catch (error) {
+      console.error('Seed error:', error);
+      return { message: 'Ошибка: ' + (error as Error).message, error: true };
+    }
   }
 
   // ─── Cities ──────────────────────────────────────────────────
