@@ -9,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
+import { SeedService } from '../../seed/seed.service';
 import { CreateComplexDto } from './dto/create-complex.dto';
 import { UpdateComplexDto } from './dto/update-complex.dto';
 import { CreateBuildingDto } from './dto/create-building.dto';
@@ -18,7 +19,18 @@ import { ApplicationStatus, ApplicationType } from '../application/entities/appl
 
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly adminService: AdminService) {}
+  constructor(
+    private readonly adminService: AdminService,
+    private readonly seedService: SeedService,
+  ) {}
+
+  // ─── Seed ────────────────────────────────────────────────────
+
+  @Post('seed')
+  async runSeed() {
+    await this.seedService.run();
+    return { message: 'Тестовые данные успешно загружены' };
+  }
 
   // ─── Cities ──────────────────────────────────────────────────
 

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
+import { SeedModule } from '../../seed/seed.module';
 import { ResidentialComplex } from '../complex/entities/complex.entity';
 import { Building } from '../building/entities/building.entity';
 import { Apartment } from '../apartment/entities/apartment.entity';
@@ -10,6 +11,7 @@ import { City } from '../city/entities/city.entity';
 
 @Module({
   imports: [
+    SeedModule,
     TypeOrmModule.forFeature([
       ResidentialComplex,
       Building,

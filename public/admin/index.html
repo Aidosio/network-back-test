@@ -546,6 +546,9 @@ textarea { resize: vertical; min-height: 80px; }
       <span>Заявки</span>
     </a>
   </nav>
+  <div style="padding: 12px 16px; border-top: 1px solid var(--sidebar-hover);">
+    <button onclick="runSeed()" style="width:100%;padding:8px;border:1px solid rgba(255,255,255,0.2);border-radius:6px;background:transparent;color:#94a3b8;cursor:pointer;font-size:13px;">Загрузить тестовые данные</button>
+  </div>
 </aside>
 
 <!-- Main Content -->
@@ -813,6 +816,20 @@ let currentComplexId = null;
 let citiesCache = [];
 
 // ═══════════════════════════════════════════════════════════════
+// Seed
+// ═══════════════════════════════════════════════════════════════
+async function runSeed() {
+  if (!confirm('Загрузить тестовые данные? Текущие данные будут перезаписаны.')) return;
+  try {
+    const res = await fetch('/api/admin/seed', { method: 'POST' });
+    if (!res.ok) throw new Error('Ошибка');
+    showToast('Тестовые данные загружены', 'success');
+    navigate(currentPage);
+  } catch (e) {
+    showToast('Ошибка загрузки данных', 'error');
+  }
+}
+
 // Navigation
 // ═══════════════════════════════════════════════════════════════
 function navigate(page, data) {
